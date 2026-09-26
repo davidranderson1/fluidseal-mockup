@@ -1,87 +1,89 @@
 # NEXT-SESSION-HANDOFF — fluidseal-mockup
 
-Written 2026-09-26 by the SSG Website / Updates session. Read this first, then
-`fluidseal-knowledge/README.md` (hub) and `infrastructure.md` (mandatory before any
-Supabase / DNS / hosting change).
+Written 2026-09-26 (afternoon session) by the SSG Website / Updates session. Read this first,
+then `fluidseal-knowledge/README.md` (hub) and `infrastructure.md` (mandatory before any
+Supabase / DNS / hosting change). Board: https://claude.ai/artifact/W1wn6LQ9drHZeHNSXsb6Yi
+
+## THE ONE THING TO KNOW
+
+**sealsonline.com/en/flabed changed its category URL scheme.** The old
+`/categories/{inch|metric}/{group}[/{profile}]` and `/categories/hard-parts/{group}` paths
+return 404. Live (verified by fetch status in the Claude browser pane, 2026-09-26):
+
+| Level | Live pattern | Example |
+|---|---|---|
+| Group | `/categories/{group}` | `/categories/rod-wipers` |
+| Sub-category | `/categories/{group}/{group}-{inch\|metric}` | `/categories/rod-wipers/rod-wipers-inch` |
+| Profile | `/categories/{group}/{group}-{inch\|metric}/{profile}` | `/categories/rod-wipers/rod-wipers-inch/an` |
+| Hard parts | top-level | `/categories/lock-nuts`, `/categories/weld-on-ports`, `/categories/hardened-steel-shim` |
+| Bushings | `hardened-steel-bushings/hardened-steel-bushings-{inch\|metric}` | |
+| Metal face seal, V-rings, bearing isolators | under `shaft-seals/` | `/categories/shaft-seals/metal-face-seal/dc`, `/categories/shaft-seals/v-rings` |
+| SBB / GE bearings | `spherical-ball-bushing/spherical-ball-bushings-{inch\|metric}/{profile}` | |
+| Markets | no `-and-` | `markets/oil-gas`, `food-beverages`, `pulp-paper`, `truck-bus`, `waste-remediation` |
+
+`redirect-map.csv` in this repo = old → live, 194 rows (29 category paths + 165 profiles;
+146 exact, 2 renamed, 4 merged, 2 own category, 13 "parent" = no live page). Anything else
+that links into the storefront (Posters site link maps, `Fluidseal_Product_Group_URLs_9.xlsx`
+in the OneDrive Website folder) still carries the old scheme — board item 16, needs David's GO.
 
 ## Where things stand
 
 | Thing | State |
 |---|---|
-| Live site | **https://mockup.fluidsealab.com** — GitHub Pages from `main`, Azure DNS CNAME `mockup` → `davidranderson1.github.io` (zone fluidsealab.com, RG Dns-rg). HTTPS cert was still issuing on 2026-09-25; **Enforce HTTPS** not yet ticked. |
-| Repo | Public (required for Pages on this plan). Files: `index.html`, `styles.css`, `markets.html`, `markets/mining.html`, `CNAME`, 9 equipment-form PDFs (7 in root, 2 in `forms/`). |
-| Home page | Categories home mirroring sealsonline.com/en/flabed with the reorganised layout: O'Rings & Kits, Kits & Parts, Hard Parts, Inch, Metric, Categories, Custom Quote Forms, Manufacturers. All 42 category links verified live. |
-| Markets | `markets.html` = 32-market index copied from the live site (31 link out to sealsonline; Mining is the mockup's own page). `markets/mining.html` = hero + intro from live, 12 profile groups, 4 OEMs, 9 equipment models with the forms' 5 part categories, products band. |
-| Equipment forms | All 9 PDFs uploaded by David in 3 batches; Mining page links and DB point at the files where they landed. Two earlier Dropbox links were **private** (audience `no_one`) — never link Dropbox share URLs from this connector on a public page. |
-| Supabase | Schema `flabed` on the shared project (`hnmbjqhxvxakhdzgetxw`). Migrations `flabed_website_catalog_v1` (sections/groups/items/profiles — 8/40/48/0) and `flabed_markets_v1` (markets/market_oems/market_equipment/market_groups — 32/4/9/17). Both logged in `marion/CHANGELOG.md`. `public`/`archive`/`xpress` untouched. **`flabed` is NOT yet in the Data API exposed schemas** — the site can't query it from the browser until David ticks it. |
-| Open Items board | https://claude.ai/artifact/W1wn6LQ9drHZeHNSXsb6Yi (David's rule: anything pending goes here, never chat-only). |
-
-## In-flight when this session ended
-
-`index.html` update **NOT pushed** — the last push was aborted mid-call. The intended
-change (built and integrity-checked locally, file was ~81 KB):
-
-1. **Manufacturers section:** replace the 5 monogram cards with embedded base64 logos
-   (Parker, Freudenberg, GGB from `/mnt/project/*.jpg|png`; Fluidseal icon rendered from
-   `Fluidseal_Icon_Only_Logo.pdf` at 300 dpi, cropped, downscaled to 200 px). Total ~47 KB.
-   Links: all 5 → `https://www.sealsonline.com/en/flabed/about-us` (verified page; a
-   reversible default — board item 6 asks David for the real targets).
-2. **Rod Boot card** (Custom Quote Forms): `href="#"` → `https://www.sealsonline.com/en/flabed/express`,
-   label "Coming soon · request via Custom Seal Quote".
-
-Current `index.html` blob SHA on `main`: `239009196a6b6021ca70e024b44dc2a34732829f`.
-Rebuild = re-read index.html, splice the Manufacturers `<section>` and the Rod Boot `<a>`,
-push with that SHA (re-check at push time — the shared-resource rule).
+| Live site | **https://mockup.fluidsealab.com** — HTTPS certificate serving (verified). **Enforce HTTPS** not yet ticked (David, board item 2). |
+| Repo | Public. `index.html` (39 KB, 4 embedded logos), `styles.css`, `markets.html`, `markets/mining.html`, `redirect-map.csv`, `CNAME`, 9 equipment-form PDFs (7 root, 2 in `forms/`), this file. |
+| Home page | 39 category links on the live scheme, all verified 200; profile counts refreshed from the live pages; Manufacturers band = embedded Parker / Freudenberg / GGB / Fluidseal logos → about-us (default); Rod Boot → /en/flabed/express. |
+| Mining page | 12 profile groups (live scheme), 4 OEM tiles each on its own kits page (Caterpillar 1,195 / Komatsu 424 / John Deere 358 / Hitachi 367 products), 9 equipment models, products band. |
+| Markets index | 32 markets; 31 link out (5 slugs fixed today), Mining is the mockup's own page. |
+| Supabase `flabed` | `groups` / `items` / `markets` / `market_oems` URLs on the live scheme. **`profiles` loaded: 269 rows** (live-crawled; 213 with item_id, 254 with group_id; 15 rows in flange-seals / back-up-rings / face-and-thread-seals / head-seals have no group — those categories are not on the mockup home, board item 15). Still NOT in the Data API exposed schemas (David, item 1). DML only today — logged in marion/CHANGELOG and hub CHANGELOG. |
+| Blob SHAs on `main` (re-check at push time) | index.html `36da70f0…`, markets/mining.html `5369cccd…`, markets.html `1f8ec459…`, redirect-map.csv `784d3439…`. |
 
 ## Open items (board numbers)
 
 | # | Item | Owner | Next action |
 |---|---|---|---|
-| 1 | `flabed` not in Supabase Data API exposed schemas | David | Supabase dashboard → Settings → API → Exposed schemas → tick `flabed` → Save |
-| 2 | Enforce HTTPS | David | GitHub → repo → Settings → Pages → tick **Enforce HTTPS** once the cert shows issued |
-| 4 | Other 31 markets are link-outs | David → Claude | David names the next market (Oil & Gas / Forestry are SSG core); Claude repeats the Mining pattern |
-| 5 | Manufacturer logos | Claude | Push the in-flight `index.html` above |
-| 6 | Manufacturer / Rod Boot link targets | David | Confirm or change the about-us / express defaults |
-| 7 | Komatsu / John Deere / Hitachi OEM tiles link to the generic OEM Kits page | Claude | Find each OEM's kits URL on the live site (needs web_search → web_fetch; Caterpillar's is `/categories/oem-kits-parts/mobile-equipment-seal-kits/caterpillar/caterpillar-kits`) and update the 3 links + `flabed.market_oems.url` |
-| 8 | `flabed.profiles` empty | Claude | Load from the Profiles tab of `Fluidseal_Product_Group_URLs_9.xlsx` (Google Drive Claude/Files) |
-| 9 | Live pricing / stock | David | Boutik platform — Website Connector proposal, not this project |
-| 10 | Redirect map for a live cut-over | Claude | Finding: the live site already serves accessories at `/categories/{slug}`; only `/categories/accessories` (the grouping page) would change → one redirect. Can be closed with that note. |
+| 1 | `flabed` not in Supabase Data API exposed schemas | David | Dashboard → Settings → API → Exposed schemas → add `flabed` → Save |
+| 2 | Enforce HTTPS | David | GitHub → repo → Settings → Pages → tick Enforce HTTPS (cert is issued) |
+| 4 | Next market | David (Q1) → Claude | "Oil & Gas?" — the project files hold the EOG brochure pages, BOP / ram-element images and the DXPE / MFP / James Walker oil-and-gas catalogs; repeat the Mining pattern |
+| 6 | Manufacturer / Rod Boot link targets | David (Q2) | keep the about-us / express defaults or give targets |
+| 15 | 4 live categories missing from the mockup home | David (Q3) → Claude | add Flange Seals, Back-up Rings, Face & Thread Seals, Head Seals cards (data already in `flabed.profiles`) |
+| 16 | Workbook + Posters link maps on the old scheme | David (Q4) → Claude | regenerate `Fluidseal_Product_Group_URLs_10.xlsx` and re-point the Posters maps from `redirect-map.csv` — touches the Posters project |
+| 9 | Live pricing / stock | David | Boutik / Website Connector, not this project |
 
-## Tool learnings that cost hours this session — read before repeating them
+## Tool learnings this session (also in the hub CHANGELOG)
 
-- **Chrome MCP freezes** on GitHub's React `<select>` (Pages branch picker), GitHub's
-  visibility modals, and Azure's blade renderers. Every freeze = 4-minute timeout and a
-  hung bridge (Filesystem MCP dies with it; Claude Desktop restart clears it). What works:
-  single-step calls (never `browser_batch`), `find` → click by element `ref`, and for
-  Azure navigate straight to the resource URL (`#@sealsonline.com/resource/subscriptions/…`)
-  instead of clicking through the list. Screenshots time out while a modal is open —
-  use `read_page`/`find` instead.
-- **GitHub sudo mode:** making a repo public prompts for David's password on a
-  `Confirm access` page. Stop there; he types it. Sudo then holds for hours.
-- **GitHub browser uploader:** 25 MB per file AND fails on a ~70 MB single commit —
-  batch it. "Try again" drops the target folder path (files land in root).
-- **Binaries:** the GitHub connector cannot push, move or rename binary files
-  (`create_or_update_file` is text-only; no git-tree ops). GitHub's web editor cannot
-  rename PDFs either. Link to files where they land, or ask David to re-upload.
-- **Dropbox connector:** `fetch` extracts text only ≤ 5 MB; `create_shared_link` makes
-  private (`no_one`) links only; temp `download_link` URLs are single-use and the sandbox
-  egress blocks `dropboxusercontent.com` anyway. Public links need the Dropbox web UI.
-- **Sandbox egress** blocks sealsonline.com, github.io, dropboxusercontent.com — verify
-  live pages in Chrome, not curl.
-- **`copy_file_user_to_claude`** was available on 2026-09-25 and absent on 2026-09-26;
-  `file_upload` (Chrome) no longer takes host paths in this desktop-app version.
-- **Published claude.ai artifacts** block ALL external images by CSP (cms.sealsonline.com
-  AND the `_next/image` proxy). GitHub Pages does not. Base64-embed for artifacts.
-- **`has_pages`** in the GitHub search API lags the Settings page; trust the page text.
-- **Shared hub files:** other sessions write `projects.md` / `CHANGELOG.md` concurrently —
-  I hit a SHA collision mid-write. Re-read immediately before every push.
+- **raw.githubusercontent.com is reachable from this Cowork sandbox** for PUBLIC repos
+  (fluidseal-mockup, marion): `curl` the raw file, `git hash-object` it, compare with the API
+  blob SHA — exact bytes at zero context cost, and the only way to verify a push byte-for-byte.
+  The hub is private (404). sealsonline.com, github.io and dropboxusercontent.com stay blocked.
+  GitHub's raw CDN can serve the previous version for a minute or two after a push — wait, then
+  re-fetch with a cache-busting query string.
+- **Pushing through the connector means retyping the whole file** (`create_or_update_file`
+  takes full content). Keep pages small: the logos are 32-colour palette PNGs at 240 px
+  (11 KB for four) — the earlier 81 KB attempt is what aborted the last session's push.
+  A trailing newline is added if the original had none (1-byte SHA drift — harmless).
+- **WebFetch works on the live storefront** (new-scheme pages) and returns a real 404 for
+  old-scheme pages; the Claude browser pane's `javascript_tool` with same-origin `fetch()` is the
+  fast way to crawl a whole category tree and check status codes in one call.
+- **Local Filesystem MCP tools failed** this session ("invalid outputSchema … draft-07");
+  `device_request_folder_access` + `device_bash` / `device_stage_files` on the OneDrive Website
+  folder worked instead — the workbook was cloud-only (I/O error in device_bash) until
+  `device_stage_files` hydrated it.
+- **Google Drive `download_file_content`:** large binaries (312 KB PDF) spill to a file on disk
+  and can be decoded there; small ones (28 KB PNG) land in context as base64 and cannot be
+  saved without retyping — prefer the larger sibling.
+- **Logo sources:** project files `Parker.png`, `Freudenberg.jpg`, `GGB.jpg`; Drive
+  "Fluidseal_Icon Only_Logo.pdf/.png/.jpg" (2026-05-28).
+- **Shared hub files:** other sessions write `projects.md` / `CHANGELOG.md` concurrently — re-read
+  immediately before every push (a SHA collision costs a full retype).
 
 ## Repo conventions
 
-- David commits manually via GitHub Desktop when working locally; commit message is
-  always `summary`. Sessions push via the GitHub connector with descriptive messages.
+- David commits manually via GitHub Desktop when working locally; commit message is always
+  `summary`. Sessions push via the GitHub connector with descriptive messages.
 - Keep every page under the 1 MB Contents-API limit — shared CSS lives in `styles.css`.
 - Product images on GitHub Pages: link the live CDN (`https://cms.sealsonline.com/uploads/…`)
-  directly; no CSP issue there.
+  directly; no CSP issue there. Published claude.ai artifacts block them — base64-embed.
 - DB writes: `flabed` schema only, schema-qualified, check `list_migrations` + marion
   CHANGELOG before, log after (marion CHANGELOG + hub CHANGELOG).
+- Every outbound sealsonline link must be verified 200 on the LIVE scheme before pushing.
