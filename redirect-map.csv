@@ -1,0 +1,199 @@
+# sealsonline.com/en/flabed — old category URL scheme → live scheme (verified live 2026-09-26)
+# Paths are relative to https://www.sealsonline.com/en/flabed/categories/
+# old scheme: {inch|metric}/{group}[/{profile}] and hard-parts/{group}; live scheme: {group}/{group}-{inch|metric}[/{profile}]
+# note: exact = same profile slug; parent = profile no longer on the live site, send to its sub-category page
+old_path,new_path,what,note
+inch/o-rings,o-rings/o-rings-inch,category,moved
+metric/o-rings,o-rings/o-rings-metric,category,moved
+hard-parts/weld-on-ports,weld-on-ports,category,moved
+hard-parts/hardened-steel-bushings-i,hardened-steel-bushings/hardened-steel-bushings-inch,category,moved
+hard-parts/hardened-steel-bushings-m,hardened-steel-bushings/hardened-steel-bushings-metric,category,moved
+hard-parts/hardened-steel-shim,hardened-steel-shim,category,moved
+hard-parts/lock-nuts,lock-nuts,category,moved
+metric/metal-face-seal/dc,shaft-seals/metal-face-seal/dc,category,moved
+metric/metal-face-seal/df,shaft-seals/metal-face-seal/df,category,moved
+metric/guiding-elements/du,guiding-elements/guiding-elements-metric/du,category,moved
+inch/guiding-elements/sbb,spherical-ball-bushing/spherical-ball-bushings-inch/sbb,category,moved
+inch/guiding-elements/sbb-2-rs,spherical-ball-bushing/spherical-ball-bushings-inch/sbb-2-rs,category,moved
+inch/guiding-elements/du-bearing,guiding-elements/guiding-elements-inch/du-bearing,category,moved
+metric/guiding-elements/ge-es-2-rs,spherical-ball-bushing/spherical-ball-bushings-metric/ge-es-2-rs,category,moved
+metric/v-rings,shaft-seals/v-rings,category,moved
+inch/rod-wipers,rod-wipers/rod-wipers-inch,category,moved
+metric/rod-wipers,rod-wipers/rod-wipers-metric,category,moved
+inch/rod-seals,rod-seals/rod-seals-inch,category,moved
+metric/rod-seals,rod-seals/rod-seals-metric,category,moved
+inch/symmetrical-seals,symmetrical-seals/symmetrical-seals-inch,category,moved
+metric/symmetrical-seals,symmetrical-seals/symmetrical-seals-metric,category,moved
+inch/piston-seals,piston-seals/piston-seals-inch,category,moved
+metric/piston-seals,piston-seals/piston-seals-metric,category,moved
+inch/vee-packings,vee-packings/vee-packings-inch,category,moved
+metric/vee-packings,vee-packings/vee-packings-metric,category,moved
+inch/guiding-elements,guiding-elements/guiding-elements-inch,category,moved
+metric/guiding-elements,guiding-elements/guiding-elements-metric,category,moved
+inch/shaft-seals,shaft-seals/shaft-seals-inch,category,moved
+metric/shaft-seals,shaft-seals/shaft-seals-metric,category,moved
+inch/rod-wipers/an,rod-wipers/rod-wipers-inch/an,profile AN,exact
+inch/rod-wipers/d,rod-wipers/rod-wipers-inch/d,profile D,exact
+inch/rod-wipers/d-30-k,rod-wipers/rod-wipers-inch,profile D 30K,parent
+inch/rod-wipers/h,rod-wipers/rod-wipers-inch/h,profile H,exact
+inch/rod-wipers/k,rod-wipers/rod-wipers-inch/k,profile K,exact
+inch/rod-wipers/d-and-k-wiper-cord,rod-wipers/rod-wipers-inch/d-k-wiper-cord,profile D & K Wiper Cord,renamed
+inch/rod-wipers/ex-1,rod-wipers/rod-wipers-inch/ex-1,profile EX1,exact
+inch/rod-wipers/ex-2,rod-wipers/rod-wipers-inch/ex-2,profile EX2,exact
+inch/rod-wipers/ex-5,rod-wipers/rod-wipers-inch/ex-5,profile EX5,exact
+inch/rod-wipers/bw-s,rod-wipers/rod-wipers-inch/bw-s,profile BW/S,exact
+inch/rod-wipers/j,rod-wipers/rod-wipers-inch/j,profile J,exact
+inch/rod-wipers/j-30-k,rod-wipers/rod-wipers-inch,profile J 30K,parent
+inch/rod-wipers/j-n,rod-wipers/rod-wipers-inch,profile J/N,parent
+inch/rod-wipers/j-dl,rod-wipers/rod-wipers-inch/j-dl,profile J/DL,exact
+inch/rod-wipers/j-dl-30-k,rod-wipers/rod-wipers-inch,profile J/DL 30K,parent
+metric/rod-wipers/wa,rod-wipers/rod-wipers-metric/wa,profile WA,exact
+metric/rod-wipers/wc,rod-wipers/rod-wipers-metric/wc,profile WC,exact
+metric/rod-wipers/wb,rod-wipers/rod-wipers-metric/wb,profile WB,exact
+metric/rod-wipers/wg,rod-wipers/rod-wipers-metric/wg,profile WG,exact
+metric/rod-wipers/wn,rod-wipers/rod-wipers-metric/wn,profile WN,exact
+metric/rod-wipers/wo,rod-wipers/rod-wipers-metric/wo,profile WO,exact
+metric/rod-wipers/ws,rod-wipers/rod-wipers-metric/ws,profile WS,exact
+metric/rod-wipers/wr,rod-wipers/rod-wipers-metric/wr,profile WR,exact
+metric/rod-wipers/wt,rod-wipers/rod-wipers-metric/wt,profile WT,exact
+metric/rod-wipers/wv,rod-wipers/rod-wipers-metric/wv,profile WV,exact
+metric/rod-wipers/ww,rod-wipers/rod-wipers-metric/ww,profile WW,exact
+metric/rod-wipers/ppw,rod-wipers/rod-wipers-metric/ppw,profile PPW,exact
+inch/rod-seals/ur,rod-seals/rod-seals-inch/ur,profile UR,exact
+inch/rod-seals/ur-30-k,rod-seals/rod-seals-inch,profile UR 30K,parent
+inch/rod-seals/e-5,rod-seals/rod-seals-inch/e-5,profile E5,exact
+inch/rod-seals/bs,rod-seals/rod-seals-inch/bs,profile BS,exact
+inch/rod-seals/bs-30-k,rod-seals/rod-seals-inch,profile BS 30K,parent
+inch/rod-seals/bs-3-l,rod-seals/rod-seals-inch/bs-3-l,profile BS/3L,exact
+inch/rod-seals/bs-sl,rod-seals/rod-seals-inch/bs-sl,profile BS/SL,exact
+inch/rod-seals/re,rod-seals/rod-seals-inch/re,profile RE,exact
+inch/rod-seals/bt,rod-seals/rod-seals-inch/bt,profile BT,exact
+inch/rod-seals/br,rod-seals/rod-seals-inch/br,profile BR,exact
+inch/rod-seals/hby,rod-seals/rod-seals-inch/hby,profile HBY,exact
+inch/rod-seals/hby-30-k,rod-seals/rod-seals-inch,profile HBY 30K,parent
+inch/rod-seals/cat-seal-ring,rod-seals/rod-seals-inch/cat-seal-ring,profile CAT Seal Ring,exact
+inch/rod-seals/cat-step-seal,rod-seals/rod-seals-inch/cat-step-seal,profile CAT Step Seal,exact
+inch/rod-seals/rss,rod-seals/rod-seals-inch/rss,profile RSS,exact
+inch/rod-seals/r-2-b,rod-seals/rod-seals-inch/r-2-b,profile R2B,exact
+inch/rod-seals/tr,rod-seals/rod-seals-inch/tr,profile TR,exact
+inch/rod-seals/v-6,rod-seals/rod-seals-inch/v-6,profile V6,exact
+metric/rod-seals/ra,rod-seals/rod-seals-metric/ra,profile RA,exact
+metric/rod-seals/ra-n,rod-seals/rod-seals-metric/ra-n,profile RA/N,exact
+metric/rod-seals/rc,rod-seals/rod-seals-metric/rc,profile RC,exact
+metric/rod-seals/rc-30-k,rod-seals/rod-seals-metric,profile RC/30K,parent
+metric/rod-seals/rc-aer,rod-seals/rod-seals-metric/rc-aer,profile RC/AER,exact
+metric/rod-seals/re,rod-seals/rod-seals-metric/re,profile RE,exact
+metric/rod-seals/rh,rod-seals/rod-seals-metric/rh,profile RH,exact
+metric/rod-seals/rv,rod-seals/rod-seals-metric/rv,profile RV,exact
+metric/rod-seals/rx,rod-seals/rod-seals-metric/rx,profile RX,exact
+metric/rod-seals/rz,rod-seals/rod-seals-metric/rz,profile RZ,exact
+metric/rod-seals/r-5-u,rod-seals/rod-seals-metric/r-5-u,profile R5/U,exact
+metric/rod-seals/r-12,rod-seals/rod-seals-metric/r-12,profile R12,exact
+metric/rod-seals/r-19,rod-seals/rod-seals-metric/r-19,profile R19,exact
+metric/rod-seals/r-16,rod-seals/rod-seals-metric/r-16,profile R16,exact
+metric/rod-seals/sd-n,rod-seals/rod-seals-metric/sd-n-st-n-sd-t-st-t,profile SD/N,merged
+metric/rod-seals/st-n,rod-seals/rod-seals-metric/sd-n-st-n-sd-t-st-t,profile ST/N,merged
+metric/rod-seals/sd-t,rod-seals/rod-seals-metric/sd-n-st-n-sd-t-st-t,profile SD/T,merged
+metric/rod-seals/st-t,rod-seals/rod-seals-metric/sd-n-st-n-sd-t-st-t,profile ST/T,merged
+inch/symmetrical-seals/standard-polypak,symmetrical-seals/symmetrical-seals-inch/standard-polypak,profile Standard Polypak,exact
+inch/symmetrical-seals/deep-polypak,symmetrical-seals/symmetrical-seals-inch/deep-polypak,profile Deep Polypak,exact
+inch/symmetrical-seals/type-b-polypak,symmetrical-seals/symmetrical-seals-inch/type-b-poly-pak,profile Type B PolyPak,renamed
+inch/symmetrical-seals/spring-loaded-polypak,symmetrical-seals/symmetrical-seals-inch/spring-loaded-polypak,profile Spring Loaded Polypak,exact
+inch/symmetrical-seals/modular-backup,symmetrical-seals/symmetrical-seals-inch/modular-backup,profile Modular Backup,exact
+inch/symmetrical-seals/za,symmetrical-seals/symmetrical-seals-inch/za,profile ZA,exact
+inch/symmetrical-seals/dz,symmetrical-seals/symmetrical-seals-inch/dz,profile DZ,exact
+inch/symmetrical-seals/us,symmetrical-seals/symmetrical-seals-inch/us,profile US,exact
+inch/symmetrical-seals/us-30-k,symmetrical-seals/symmetrical-seals-inch,profile US 30K,parent
+inch/symmetrical-seals/an-6226,symmetrical-seals/symmetrical-seals-inch/an-6226,profile AN6226,exact
+inch/symmetrical-seals/8400,symmetrical-seals/symmetrical-seals-inch/8400,profile 8400,exact
+inch/symmetrical-seals/hu,symmetrical-seals/symmetrical-seals-inch,profile HU,parent
+metric/symmetrical-seals/a,symmetrical-seals/symmetrical-seals-metric/a,profile A,exact
+metric/symmetrical-seals/a-n,symmetrical-seals/symmetrical-seals-metric/a-n,profile A/N,exact
+metric/symmetrical-seals/b,symmetrical-seals/symmetrical-seals-metric/b,profile B,exact
+inch/piston-seals/up,piston-seals/piston-seals-inch/up,profile UP,exact
+inch/piston-seals/up-30-k,piston-seals/piston-seals-inch,profile UP 30K,parent
+inch/piston-seals/e-4,piston-seals/piston-seals-inch/e-4,profile E4,exact
+inch/piston-seals/cb,piston-seals/piston-seals-inch/cb,profile CB,exact
+inch/piston-seals/cf,piston-seals/piston-seals-inch/cf,profile CF,exact
+inch/piston-seals/ch,piston-seals/piston-seals-inch/ch,profile CH,exact
+inch/piston-seals/tp,piston-seals/piston-seals-inch/tp,profile TP,exact
+inch/piston-seals/psp,piston-seals/piston-seals-inch/psp,profile PSP,exact
+inch/piston-seals/psp-a-at,piston-seals/piston-seals-inch/psp-a-at,profile PSP-A-AT,exact
+inch/piston-seals/bp,piston-seals/piston-seals-inch/bp,profile BP,exact
+inch/piston-seals/pip-seal,piston-seals/piston-seals-inch/pip-seal,profile PIP Seal,exact
+inch/piston-seals/pip-ring,piston-seals/piston-seals-inch/pip-ring,profile PIP Ring,exact
+inch/piston-seals/tfes,piston-seals/piston-seals-inch/tfes,profile TFES,exact
+inch/piston-seals/160-g,piston-seals/piston-seals-inch/160-g,profile 160G,exact
+inch/piston-seals/169-b,piston-seals/piston-seals-inch/169-b,profile 169B,exact
+inch/piston-seals/169-g,piston-seals/piston-seals-inch/169-g,profile 169G,exact
+inch/piston-seals/169-u,piston-seals/piston-seals-inch/169-u,profile 169U,exact
+inch/piston-seals/cat-type-1,piston-seals/piston-seals-inch/cat-type-1,profile CAT Type 1,exact
+inch/piston-seals/aq,piston-seals/piston-seals-inch/aq,profile AQ,exact
+inch/piston-seals/ps-2470,piston-seals/piston-seals-inch/ps-2470,profile PS2470,exact
+inch/piston-seals/c-914,piston-seals/piston-seals-inch/c-914,profile C914,exact
+inch/piston-seals/cat-type-3,piston-seals/piston-seals-inch/cat-type-3,profile CAT Type 3,exact
+inch/piston-seals/hdp-330,piston-seals/piston-seals-inch/hdp-330,profile HDP 330,exact
+inch/piston-seals/cts,piston-seals/piston-seals-inch/cts,profile CTS,exact
+inch/piston-seals/p-1000,piston-seals/piston-seals-inch/p-1000,profile P1000,exact
+inch/piston-seals/p-1000-hyco,piston-seals/piston-seals-inch/p-1000-hyco,profile P1000 HYCO,exact
+inch/piston-seals/p-3-c,piston-seals/piston-seals-inch/p-3-c,profile P3C,exact
+inch/piston-seals/p-3-d,piston-seals/piston-seals-inch/p-3-d,profile P3D,exact
+inch/piston-seals/p-5-b,piston-seals/piston-seals-inch/p-5-b,profile P5B,exact
+metric/piston-seals/pb-1,piston-seals/piston-seals-metric,profile PB-1,parent
+metric/piston-seals/pb,piston-seals/piston-seals-metric/pb,profile PB,exact
+metric/piston-seals/pb-n,piston-seals/piston-seals-metric,profile PB/N,parent
+metric/piston-seals/ph,piston-seals/piston-seals-metric/ph,profile PH,exact
+metric/piston-seals/pr,piston-seals/piston-seals-metric/pr,profile PR,exact
+metric/piston-seals/kr,piston-seals/piston-seals-metric/kr,profile KR,exact
+metric/piston-seals/pz,piston-seals/piston-seals-metric/pz,profile PZ,exact
+metric/piston-seals/p-1-b,piston-seals/piston-seals-metric/p-1-b,profile P1B,exact
+metric/piston-seals/p-1-b-1,piston-seals/piston-seals-metric/p-1-b-1,profile P1B-1,exact
+metric/piston-seals/p-2-b,piston-seals/piston-seals-metric/p-2-b,profile P2B,exact
+metric/piston-seals/st-n,piston-seals/piston-seals-metric/st-n,profile ST/N,exact
+metric/piston-seals/p-2-b-u,piston-seals/piston-seals-metric/p-2-b-u,profile P2B/U,exact
+metric/piston-seals/p-2-e,piston-seals/piston-seals-metric/p-2-e,profile P2E,exact
+metric/piston-seals/p-2-g,piston-seals/piston-seals-metric/p-2-g,profile P2G,exact
+metric/piston-seals/p-3-c,piston-seals/piston-seals-metric/p-3-c,profile P3C,exact
+metric/piston-seals/p-4-a,piston-seals/piston-seals-metric/p-4-a,profile P4A,exact
+metric/piston-seals/p-5-b,piston-seals/piston-seals-metric/p-5-b,profile P5B,exact
+inch/vee-packings/standard-vee-packing,vee-packings/vee-packings-inch/standard-vee-packing,profile Standard Vee Packing,exact
+inch/vee-packings/standard-vee-sets,vee-packings/vee-packings-inch/standard-vee-sets,profile Standard Vee Sets,exact
+inch/vee-packings/hydrolock-vee-set,vee-packings/vee-packings-inch/hydrolock-vee-set,profile Hydrolock Vee Set,exact
+inch/vee-packings/guidelocks,vee-packings/vee-packings-inch/guidelocks,profile Guidelocks,exact
+inch/vee-packings/vee-coil,vee-packings/vee-packings-inch/vee-coil,profile Vee Coil,exact
+metric/vee-packings/v-1,vee-packings/vee-packings-metric/v-1,profile V1,exact
+metric/vee-packings/v-3,vee-packings/vee-packings-metric/v-3,profile V3,exact
+inch/guiding-elements/w-1-w-2-w-3-w-4-wr,guiding-elements/guiding-elements-inch/w-1-w-2-w-3-w-4-wr,profile W1 W2 W3 W4 WR,exact
+inch/guiding-elements/ws,guiding-elements/guiding-elements-inch/ws,profile WS,exact
+metric/guiding-elements/gb,guiding-elements/guiding-elements-metric/gb,profile GB,exact
+metric/guiding-elements/gb-n,guiding-elements/guiding-elements-metric/gb-n,profile GB/N,exact
+metric/guiding-elements/gc,guiding-elements/guiding-elements-metric/gc,profile GC,exact
+metric/guiding-elements/ws,guiding-elements/guiding-elements-metric/ws,profile WS,exact
+metric/guiding-elements/ge,guiding-elements/guiding-elements-metric/ge,profile GE,exact
+metric/guiding-elements/ge-gs-2-rs,spherical-ball-bushing/spherical-ball-bushings-metric/ge-gs-2-rs,profile GE-GS2RS,exact
+inch/orings/2-xxx,o-rings/o-rings-inch/2-xxx,profile 2-XXX,exact
+inch/orings/3-xxx,o-rings/o-rings-inch/3-xxx,profile 3-XXX,exact
+inch/orings/4-xxx,o-rings/o-rings-inch/4-xxx,profile 4-XXX,exact
+inch/orings/ts-xxx,o-rings/o-rings-inch/ts-xxx,profile TS-XXX,exact
+inch/orings/oring-cord,o-rings/o-rings-inch/oring-cord,profile O'Ring Cord,exact
+inch/orings/ed-din-connector-rings,o-rings/o-rings-metric/ed-din-connector-rings,profile ED - DIN Connector Rings,exact
+inch/orings/cat-hydraulic-hose-coupling-seals,o-rings/o-rings-inch/cat-hydraulic-hose-coupling-seals,profile CAT Hydraulic Hose Coupling Seals,exact
+inch/orings/8-xxx,back-up-rings/back-up-rings-inch/8-xxx,profile 8-XXX,exact
+inch/orings/8700,back-up-rings/back-up-rings-inch/8700,profile 8700,exact
+inch/orings/head-seals,head-seals,profile Head Seals,own category
+inch/orings/sfs,flange-seals/flange-seals-inch/sfs,profile SFS,exact
+inch/orings/pfs,flange-seals/flange-seals-inch/pfs,profile PFS,exact
+inch/orings/bs-400,face-and-thread-seals/face-and-thread-seals-inch/bs-400,profile BS400,exact
+inch/orings/bs-400-sc,face-and-thread-seals/face-and-thread-seals-inch/bs-400-sc,profile BS400SC,exact
+inch/orings/600,face-and-thread-seals/face-and-thread-seals-inch/600,profile 600,exact
+inch/orings/7500,face-and-thread-seals/face-and-thread-seals-inch/7500,profile 7500,exact
+inch/orings/d-ring,d-ring,profile D-Ring,own category
+inch/orings-others/quad-rings,o-rings/o-rings-metric/quad-rings,profile Quad Rings,exact
+inch/orings-others/ov,flange-seals/flange-seals-metric/ov,profile OV,exact
+inch/orings-others/oring-cord,o-rings/o-rings-inch/oring-cord,profile O'Ring Cord,exact
+inch/orings-others/sd-t,back-up-rings/back-up-rings-metric/sd-t,profile SD/T,exact
+inch/orings-others/sd-u,back-up-rings/back-up-rings-metric/sd-u,profile SD/U,exact
+inch/orings-others/usit-rings,face-and-thread-seals/face-and-thread-seals-metric/usit-rings,profile Usit Rings,exact
+inch/orings-others/usit-rings-self-centering,face-and-thread-seals/face-and-thread-seals-metric/usit-rings-self-centering,profile Usit Rings - Self Centering,exact
+inch/orings-others/ed-din-connector-rings,o-rings/o-rings-metric/ed-din-connector-rings,profile ED - DIN Connector Rings,exact
+inch/o-rings/8-xxx,back-up-rings/back-up-rings-inch/8-xxx,profile 8-XXX,exact
