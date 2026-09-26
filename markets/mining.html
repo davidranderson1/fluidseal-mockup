@@ -8,6 +8,109 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Saira+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
+<style>
+  /* ---- Markets / Mining: equipment cards with photo + order panel (page-specific) ---- */
+  .fs-cart{cursor:pointer;background:none;border:0;font:inherit;color:inherit}
+  .eq-grid{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:980px){.eq-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.eq-grid{grid-template-columns:1fr}}
+  .eq2{gap:8px;padding:0 0 14px;overflow:hidden}
+  .eq2 .eq-photo{display:block;width:100%;aspect-ratio:16/9;background:#fff;border:0;border-bottom:1px solid var(--line);padding:0;cursor:pointer;overflow:hidden}
+  .eq2 .eq-photo img{width:100%;height:100%;object-fit:contain;padding:10px 14px;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+  .eq2 .eq-photo:hover img{transform:scale(1.04)}
+  .eq2 .eq-oem,.eq2 .eq-name,.eq2 .eq-type,.eq2 .eq-stat,.eq2 .eq-chips,.eq2 .eq-order{margin-left:16px;margin-right:16px}
+  .eq2 .eq-oem{margin-top:6px}
+  .eq2 .eq-stat{font-family:'Saira Condensed',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.03em;color:var(--slate)}
+  .eq-chips .chip{font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.04em;color:#111;background:#fff;border:1px solid var(--line);padding:4px 9px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:border-color .2s,box-shadow .2s}
+  .eq-chips .chip i{font-style:normal;font-size:10.5px;color:#fff;background:#111;border-radius:100px;padding:0 6px;line-height:16px}
+  .eq-chips .chip.kit{background:#111;color:#F5D000;border-color:#111}
+  .eq-chips .chip.kit i{background:#F5D000;color:#111}
+  .eq-chips .chip.cur{color:var(--slate);background:var(--paper)}
+  .eq-chips .chip.rel{border-style:dashed}
+  .eq-chips .chip:hover{border-color:#F5D000;box-shadow:0 0 0 3px rgba(245,208,0,.3)}
+  .eq2 .eq-order{margin-top:auto;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;color:#111;background:#F5D000;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;transition:transform .2s,box-shadow .2s}
+  .eq2 .eq-order:hover{transform:translateY(-2px);box-shadow:0 10px 20px -12px rgba(0,0,0,.6)}
+  /* ---- order panel ---- */
+  .op-backdrop,.cart-backdrop{position:fixed;inset:0;background:rgba(17,22,28,.55);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto}
+  .op-backdrop[hidden],.cart-backdrop[hidden],.toast[hidden],.op-note[hidden]{display:none}
+  .op{width:min(1100px,100%);background:#fff;border-radius:14px;box-shadow:0 30px 80px -30px rgba(0,0,0,.6);display:flex;flex-direction:column;max-height:calc(100vh - 56px)}
+  .op-head{display:flex;align-items:center;gap:18px;padding:18px 22px;border-bottom:1px solid var(--line)}
+  .op-photo{width:150px;height:84px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#fff;flex:0 0 auto}
+  .op-titles{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+  .op-titles h2{font-family:'Archivo',sans-serif;font-weight:800;font-size:22px;line-height:1.1;margin:0}
+  .op-sub{font-size:13px;color:#555}
+  .op-close{flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:24px;line-height:1;cursor:pointer;color:#111}
+  .op-close:hover{background:var(--paper)}
+  .op-tabs{display:flex;flex-wrap:wrap;gap:6px;padding:12px 22px;border-bottom:1px solid var(--line);background:var(--paper)}
+  .op-tabs a{font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#111;background:#fff;border:1px solid var(--line);padding:5px 10px;border-radius:6px;text-decoration:none}
+  .op-tabs a:hover,.op-tabs a.on{border-color:#F5D000;box-shadow:0 0 0 3px rgba(245,208,0,.3)}
+  .op-body{overflow:auto;padding:6px 22px 18px;flex:1}
+  .op-note{margin:10px 22px 4px;padding:10px 14px;border-left:4px solid #F5D000;background:#fffbe5;font-size:13.5px;line-height:1.5;color:#333;border-radius:0 8px 8px 0}
+  .op-sec{padding:18px 0 6px;border-bottom:1px solid var(--line);scroll-margin-top:8px}
+  .op-sec:last-child{border-bottom:0}
+  .op-sec h3{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:'Archivo',sans-serif;font-weight:700;font-size:16px;margin:0 0 10px}
+  .op-sec h3 .n{font-family:'Saira Condensed',sans-serif;font-size:12px;color:#fff;background:#111;border-radius:100px;padding:1px 8px}
+  .op-sec h3 .browse{margin-left:auto;font-family:Arial,sans-serif;font-weight:700;font-size:12.5px;color:#111;text-decoration:none;border-bottom:2px solid #F5D000}
+  .op-sec.hl{background:#fffbe5;margin:0 -12px;padding-left:12px;padding-right:12px;border-radius:8px}
+  .tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.parts{width:100%;border-collapse:collapse;font-size:13px}
+  table.parts th{text-align:left;font-family:'Saira Condensed',sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);padding:6px 8px;border-bottom:2px solid var(--line);white-space:nowrap}
+  table.parts td{padding:7px 8px;border-bottom:1px solid #eef1f4;vertical-align:middle}
+  table.parts td.pn{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:500;font-size:12.5px;white-space:nowrap}
+  table.parts td.pn a{color:#111;text-decoration:none;border-bottom:1px dotted #999}
+  table.parts td.pn a:hover{border-bottom-color:#111}
+  table.parts td.price{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  table.parts td.price small{color:#888;font-size:10.5px;margin-left:3px}
+  table.parts td.used{color:#666;font-size:12px}
+  table.parts td.act{white-space:nowrap;text-align:right}
+  table.parts input.qty{width:52px;padding:5px 6px;border:1px solid var(--line);border-radius:6px;font:inherit;text-align:center;margin-right:6px}
+  .btn{font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid #111;background:#fff;color:#111;transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 8px 16px -10px rgba(0,0,0,.6)}
+  .btn.primary{background:#111;color:#F5D000}
+  .btn.ghost{background:#fff}
+  .btn.add{font-size:12px;padding:6px 10px;background:#F5D000;border-color:#F5D000}
+  .btn.added{background:#1f8b5f;border-color:#1f8b5f;color:#fff}
+  .op-foot{display:flex;gap:10px;justify-content:flex-end;padding:14px 22px;border-top:1px solid var(--line);background:var(--paper);border-radius:0 0 14px 14px}
+  .free-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 4px}
+  .free-row input{padding:7px 9px;border:1px solid var(--line);border-radius:6px;font:inherit}
+  .free-row input.pnin{flex:1;min-width:160px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12.5px}
+  details.rel{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;background:#fff}
+  details.rel summary{cursor:pointer;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  details.rel summary .n{font-family:'Saira Condensed',sans-serif;font-size:12px;color:var(--slate);font-weight:600}
+  details.rel .apps{font-size:12px;color:#666}
+  /* ---- cart drawer ---- */
+  .cart-backdrop{justify-content:flex-end;padding:0}
+  .cart{width:min(440px,100%);height:100vh;background:#fff;box-shadow:-20px 0 60px -30px rgba(0,0,0,.6);display:flex;flex-direction:column}
+  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+  .cart-head h2{font-family:'Archivo',sans-serif;font-weight:800;font-size:20px;margin:0}
+  .cart-body{flex:1;overflow:auto;padding:10px 20px}
+  .cart-line{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:10px 0;border-bottom:1px solid #eef1f4;font-size:13px}
+  .cart-line small{color:#888;font-size:10.5px;margin-left:3px}
+  .cart-line .pn{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;font-size:12.5px}
+  .cart-line .d{color:#555;font-size:12px;grid-column:1}
+  .cart-line .for{color:#888;font-size:11.5px;grid-column:1}
+  .cart-line .r{grid-column:2;grid-row:1 / span 3;display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-variant-numeric:tabular-nums}
+  .cart-line .r input{width:50px;padding:4px;border:1px solid var(--line);border-radius:6px;text-align:center;font:inherit}
+  .cart-line .r button{background:none;border:0;color:#c5330f;cursor:pointer;font-size:12px;padding:0}
+  .cart-empty{padding:30px 0;color:#666;text-align:center}
+  .cart-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;background:var(--paper)}
+  .cart-total{display:flex;justify-content:space-between;font-size:14px}
+  .cart-note{font-size:11.5px;color:#777;line-height:1.4}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#111;color:#F5D000;font-family:'Archivo',sans-serif;font-weight:700;font-size:13.5px;padding:11px 18px;border-radius:100px;z-index:1200;box-shadow:0 12px 30px -10px rgba(0,0,0,.6)}
+  @media(max-width:680px){
+    .op-backdrop{padding:0}
+    .op{max-height:100vh;border-radius:0;width:100%}
+    .op-photo{width:96px;height:60px}
+    .op-titles h2{font-size:18px}
+    table.parts td.used,table.parts th.used,table.parts td.det,table.parts th.det{display:none}
+    table.parts input.qty{width:44px}
+    .op-body{padding:6px 12px 18px}
+    .op-note{margin:8px 12px 4px}
+    .op-tabs,.op-head,.op-foot{padding-left:12px;padding-right:12px}
+    .op-foot{flex-direction:column}
+  }
+
+</style>
 </head>
 <body>
 <!-- ===== FLUIDSEAL LIVE HEADER ===== -->
@@ -20,7 +123,7 @@
     </div>
     <div class="fs-topbar-right">
       <div class="fs-search"><input placeholder="Search by model #"><span class="fs-search-ico">🔍</span></div>
-      <span class="fs-cart">🛒 <b>0</b></span>
+      <button class="fs-cart" id="cart-btn" type="button" title="View cart">🛒 <b id="cart-count">0</b></button>
     </div>
   </div>
 </div>
@@ -50,8 +153,116 @@
   </div>
 
   <main class="wrap" style="padding-top:0">
-    <section class="band">
-      <div class="band-head"><span class="band-tag inch">Profile Groups for Mining</span><span class="band-count">12</span><span class="band-rule"></span></div>
+<section class="band">
+      <div class="band-head"><span class="band-tag oring">Products For Mining Equipment</span><span class="band-count">5</span><span class="band-rule"></span></div>
+      <div class="grid">
+        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/hardened-steel-bushings/hardened-steel-bushings-inch"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/hardened_steel_bushings_600_6c3b98a43f.png" alt=""></span><div class="body"><div class="name">Hardened Bearings</div><span class="cnt">HSB1 · HSB2 · HSB3</span></div></a>
+        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/spherical-ball-bushing/spherical-ball-bushings-inch/sbb"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/SBB_600_e8f075a40e.png" alt=""></span><div class="body"><div class="name">Spherical Bearings</div><span class="cnt">GE-GSR2S · GE-ESR2S · SBB · SBB-2RS</span></div></a>
+        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts"><span class="thumb"><span class="mono">SB</span></span><div class="body"><div class="name">Stud Ball Kits</div><span class="cnt">OEM-specific</span></div></a>
+        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/all_parts_web_83c5914d83.png" alt=""></span><div class="body"><div class="name">OEM Seal Kits</div><span class="cnt">Cat · Komatsu · Deere · Hitachi</span></div></a>
+        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/piston-seals/piston-seals-inch"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/piston_seals_31249b662d.jpg" alt=""></span><div class="body"><div class="name">High-Performance Replacements</div><span class="cnt">Resilon® piston · pony rod · valve seals · well service packing</span></div></a>
+      </div>
+    </section>
+
+<section class="band">
+      <div class="band-head"><span class="band-tag top">Mining OEMs</span><span class="band-count">4</span><span class="band-rule"></span></div>
+      <div class="grid">
+        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/caterpillar/caterpillar-kits"><span class="mark">CAT</span><div><div class="nm">Caterpillar</div><div class="meta">Dozers · Mining trucks · Cat seal kits</div></div></a>
+        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/komatsu/komatsu-kits"><span class="mark">KOM</span><div><div class="nm">Komatsu</div><div class="meta">Mining trucks · Excavators · Articulated trucks</div></div></a>
+        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/john-deere/john-deere-kits"><span class="mark">JD</span><div><div class="nm">John Deere</div><div class="meta">Excavators · Articulated dump trucks</div></div></a>
+        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/hitachi/hitachi-kits"><span class="mark">HIT</span><div><div class="nm">Hitachi</div><div class="meta">Excavators · Mining trucks</div></div></a>
+      </div>
+    </section>
+
+    <section class="band" id="equipment">
+      <div class="band-head"><span class="band-tag metric">Equipment · Make · Model</span><span class="band-count">9</span><span class="band-rule"></span><span class="band-meta">Click a machine or a product type to see the parts that fit it</span></div>
+      <div class="grid eq-grid">
+        <div class="eq eq2" id="eq-cat-797f">
+          <button type="button" class="eq-photo" data-open="cat-797f" data-sec="kits" title="Order parts for this machine"><img data-photo="cat-797f" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Caterpillar 797F Mining Truck"></button>
+          <span class="eq-oem">Caterpillar</span>
+          <div class="eq-name">Caterpillar 797F</div>
+          <div class="eq-type">Mining Truck</div>
+          <div class="eq-stat">1 seal kit on file</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="cat-797f" data-sec="kits">Caterpillar Seal Kits <i>1</i></button><button type="button" class="chip cur" data-open="cat-797f" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="cat-797f" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="cat-797f" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="cat-797f" data-sec="curated">High-Performance Replacements</button><button type="button" class="chip rel" data-open="cat-797f" data-sec="related">Other Caterpillar models <i>3</i></button></div>
+          <button type="button" class="eq-order" data-open="cat-797f" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-cat-d11t">
+          <button type="button" class="eq-photo" data-open="cat-d11t" data-sec="kits" title="Order parts for this machine"><img data-photo="cat-d11t" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Caterpillar D11T Dozer"></button>
+          <span class="eq-oem">Caterpillar</span>
+          <div class="eq-name">Caterpillar D11T</div>
+          <div class="eq-type">Dozer</div>
+          <div class="eq-stat">4 seal kits on file</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="cat-d11t" data-sec="kits">Caterpillar Seal Kits <i>4</i></button><button type="button" class="chip cur" data-open="cat-d11t" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="cat-d11t" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="cat-d11t" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="cat-d11t" data-sec="curated">High-Performance Replacements</button><button type="button" class="chip rel" data-open="cat-d11t" data-sec="related">Other Caterpillar models <i>3</i></button></div>
+          <button type="button" class="eq-order" data-open="cat-d11t" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-komatsu-980e">
+          <button type="button" class="eq-photo" data-open="komatsu-980e" data-sec="kits" title="Order parts for this machine"><img data-photo="komatsu-980e" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Komatsu 980E Mining Truck"></button>
+          <span class="eq-oem">Komatsu</span>
+          <div class="eq-name">Komatsu 980E</div>
+          <div class="eq-type">Mining Truck</div>
+          <div class="eq-stat">4 kits on file for 930E · 56 components</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="komatsu-980e" data-sec="kits">Komatsu Seal Kits <i>4</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-Rod_Seals">Rod Seals <i>11</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-Buffer_Seal">Buffer Seals <i>2</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-Rod_Wipers">Rod Wipers <i>6</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-Piston_Seals">Piston Seals <i>5</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-Wear_Ring">Wear Rings <i>11</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-O-Rings">O&#x27;Rings <i>11</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-Backups">Back-up Rings <i>7</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-Gaskets">Gaskets <i>1</i></button><button type="button" class="chip" data-open="komatsu-980e" data-sec="g-">Other kit components <i>2</i></button><button type="button" class="chip cur" data-open="komatsu-980e" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="komatsu-980e" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="komatsu-980e" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="komatsu-980e" data-sec="curated">High-Performance Replacements</button><button type="button" class="chip rel" data-open="komatsu-980e" data-sec="related">Other Komatsu models <i>1</i></button></div>
+          <button type="button" class="eq-order" data-open="komatsu-980e" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-komatsu-hm400">
+          <button type="button" class="eq-photo" data-open="komatsu-hm400" data-sec="kits" title="Order parts for this machine"><img data-photo="komatsu-hm400" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Komatsu HM400 Articulated Truck"></button>
+          <span class="eq-oem">Komatsu</span>
+          <div class="eq-name">Komatsu HM400</div>
+          <div class="eq-type">Articulated Truck</div>
+          <div class="eq-stat">1 seal kit on file</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="komatsu-hm400" data-sec="kits">Komatsu Seal Kits <i>1</i></button><button type="button" class="chip cur" data-open="komatsu-hm400" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="komatsu-hm400" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="komatsu-hm400" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="komatsu-hm400" data-sec="curated">High-Performance Replacements</button></div>
+          <button type="button" class="eq-order" data-open="komatsu-hm400" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-komatsu-pc290lc-11">
+          <button type="button" class="eq-photo" data-open="komatsu-pc290lc-11" data-sec="kits" title="Order parts for this machine"><img data-photo="komatsu-pc290lc-11" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Komatsu PC290LC-11 Excavator"></button>
+          <span class="eq-oem">Komatsu</span>
+          <div class="eq-name">Komatsu PC290LC-11</div>
+          <div class="eq-type">Excavator</div>
+          <div class="eq-stat">No model-specific kit on file yet — quote on request</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip cur" data-open="komatsu-pc290lc-11" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="komatsu-pc290lc-11" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="komatsu-pc290lc-11" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="komatsu-pc290lc-11" data-sec="curated">High-Performance Replacements</button><button type="button" class="chip rel" data-open="komatsu-pc290lc-11" data-sec="related">Other Komatsu models <i>2</i></button></div>
+          <button type="button" class="eq-order" data-open="komatsu-pc290lc-11" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-hitachi-ex8000-6">
+          <button type="button" class="eq-photo" data-open="hitachi-ex8000-6" data-sec="kits" title="Order parts for this machine"><img data-photo="hitachi-ex8000-6" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Hitachi EX8000-6 Excavator"></button>
+          <span class="eq-oem">Hitachi</span>
+          <div class="eq-name">Hitachi EX8000-6</div>
+          <div class="eq-type">Excavator</div>
+          <div class="eq-stat">4 seal kits on file · 18 components</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="hitachi-ex8000-6" data-sec="kits">Hitachi Seal Kits <i>4</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-Rod_Seals">Rod Seals <i>1</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-Buffer_Seal">Buffer Seals <i>1</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-Rod_Wipers">Rod Wipers <i>1</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-Piston_Seals">Piston Seals <i>1</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-Wear_Ring">Wear Rings <i>3</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-Bearing">Bearings &amp; Bushings <i>1</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-O-Rings">O&#x27;Rings <i>5</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-Backups">Back-up Rings <i>4</i></button><button type="button" class="chip" data-open="hitachi-ex8000-6" data-sec="g-PIN_WIPERS">Pin Wipers <i>1</i></button><button type="button" class="chip cur" data-open="hitachi-ex8000-6" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="hitachi-ex8000-6" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="hitachi-ex8000-6" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="hitachi-ex8000-6" data-sec="curated">High-Performance Replacements</button><button type="button" class="chip rel" data-open="hitachi-ex8000-6" data-sec="related">Other Hitachi models <i>2</i></button></div>
+          <button type="button" class="eq-order" data-open="hitachi-ex8000-6" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-hitachi-mining-truck">
+          <button type="button" class="eq-photo" data-open="hitachi-mining-truck" data-sec="kits" title="Order parts for this machine"><img data-photo="hitachi-mining-truck" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="Hitachi Mining Truck"></button>
+          <span class="eq-oem">Hitachi</span>
+          <div class="eq-name">Hitachi Mining Truck</div>
+          <div class="eq-type">Mining Truck</div>
+          <div class="eq-stat">1 kit on file for EH5000 · 27 components</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="hitachi-mining-truck" data-sec="kits">Hitachi Seal Kits <i>1</i></button><button type="button" class="chip" data-open="hitachi-mining-truck" data-sec="g-Rod_Seals">Rod Seals <i>2</i></button><button type="button" class="chip" data-open="hitachi-mining-truck" data-sec="g-Buffer_Seal">Buffer Seals <i>3</i></button><button type="button" class="chip" data-open="hitachi-mining-truck" data-sec="g-Rod_Wipers">Rod Wipers <i>4</i></button><button type="button" class="chip" data-open="hitachi-mining-truck" data-sec="g-Piston_Seals">Piston Seals <i>3</i></button><button type="button" class="chip" data-open="hitachi-mining-truck" data-sec="g-Wear_Ring">Wear Rings <i>6</i></button><button type="button" class="chip" data-open="hitachi-mining-truck" data-sec="g-O-Rings">O&#x27;Rings <i>8</i></button><button type="button" class="chip" data-open="hitachi-mining-truck" data-sec="g-Backups">Back-up Rings <i>1</i></button><button type="button" class="chip cur" data-open="hitachi-mining-truck" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="hitachi-mining-truck" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="hitachi-mining-truck" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="hitachi-mining-truck" data-sec="curated">High-Performance Replacements</button></div>
+          <button type="button" class="eq-order" data-open="hitachi-mining-truck" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-deere-870g-lc">
+          <button type="button" class="eq-photo" data-open="deere-870g-lc" data-sec="kits" title="Order parts for this machine"><img data-photo="deere-870g-lc" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="John Deere 870G LC Excavator"></button>
+          <span class="eq-oem">John Deere</span>
+          <div class="eq-name">John Deere 870G LC</div>
+          <div class="eq-type">Excavator</div>
+          <div class="eq-stat">3 seal kits on file</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="deere-870g-lc" data-sec="kits">John Deere Seal Kits <i>3</i></button><button type="button" class="chip cur" data-open="deere-870g-lc" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="deere-870g-lc" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="deere-870g-lc" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="deere-870g-lc" data-sec="curated">High-Performance Replacements</button><button type="button" class="chip rel" data-open="deere-870g-lc" data-sec="related">Other John Deere models <i>1</i></button></div>
+          <button type="button" class="eq-order" data-open="deere-870g-lc" data-sec="kits">Order parts for this machine →</button>
+        </div>
+        <div class="eq eq2" id="eq-deere-adt">
+          <button type="button" class="eq-photo" data-open="deere-adt" data-sec="kits" title="Order parts for this machine"><img data-photo="deere-adt" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="John Deere ADT Articulated Dump Truck"></button>
+          <span class="eq-oem">John Deere</span>
+          <div class="eq-name">John Deere ADT</div>
+          <div class="eq-type">Articulated Dump Truck</div>
+          <div class="eq-stat">1 seal kit on file</div>
+          <div class="eq-parts eq-chips"><button type="button" class="chip kit" data-open="deere-adt" data-sec="kits">John Deere Seal Kits <i>1</i></button><button type="button" class="chip cur" data-open="deere-adt" data-sec="curated">Hardened Bearings</button><button type="button" class="chip cur" data-open="deere-adt" data-sec="curated">Spherical Bearings</button><button type="button" class="chip cur" data-open="deere-adt" data-sec="curated">Stud Ball Kits</button><button type="button" class="chip cur" data-open="deere-adt" data-sec="curated">High-Performance Replacements</button><button type="button" class="chip rel" data-open="deere-adt" data-sec="related">Other John Deere models <i>1</i></button></div>
+          <button type="button" class="eq-order" data-open="deere-adt" data-sec="kits">Order parts for this machine →</button>
+        </div>
+      </div>
+    </section>
+
+<section class="band">
+      <div class="band-head"><span class="band-tag inch">Mining Products by Type</span><span class="band-count">12</span><span class="band-rule"></span></div>
       <div class="grid">
         <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/piston-seals/piston-seals-inch"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/piston_seals_31249b662d.jpg" alt=""></span><div class="body"><div class="name">Piston Seals</div><span class="cnt">Resilon® polyurethane</span></div></a>
         <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/rod-seals/rod-seals-inch"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/rod_seals_187b71c3c1.jpg" alt=""></span><div class="body"><div class="name">Rod Seals</div><span class="cnt">Pony rod seals</span></div></a>
@@ -67,42 +278,208 @@
         <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts"><span class="thumb"><span class="mono">OE</span></span><div class="body"><div class="name">OEM Kits & Parts</div><span class="cnt">Seal kits · stud ball kits</span></div></a>
       </div>
     </section>
-
-    <section class="band">
-      <div class="band-head"><span class="band-tag top">Mining OEMs</span><span class="band-count">4</span><span class="band-rule"></span></div>
-      <div class="grid">
-        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/caterpillar/caterpillar-kits"><span class="mark">CAT</span><div><div class="nm">Caterpillar</div><div class="meta">Dozers · Mining trucks · Cat seal kits</div></div></a>
-        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/komatsu/komatsu-kits"><span class="mark">KOM</span><div><div class="nm">Komatsu</div><div class="meta">Mining trucks · Excavators · Articulated trucks</div></div></a>
-        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/john-deere/john-deere-kits"><span class="mark">JD</span><div><div class="nm">John Deere</div><div class="meta">Excavators · Articulated dump trucks</div></div></a>
-        <a class="oem" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits/hitachi/hitachi-kits"><span class="mark">HIT</span><div><div class="nm">Hitachi</div><div class="meta">Excavators · Mining trucks</div></div></a>
-      </div>
-    </section>
-
-    <section class="band">
-      <div class="band-head"><span class="band-tag metric">Equipment · Make · Model</span><span class="band-count">9</span><span class="band-rule"></span></div>
-      <div class="grid">
-        <div class="eq"><span class="eq-oem">Caterpillar</span><div class="eq-name">Caterpillar 797F</div><div class="eq-type">Mining Truck</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../Caterpillar%20797F%20Mining%20Truck-Equipment%20Order%20Form-Fillable.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">Caterpillar</span><div class="eq-name">Caterpillar D11T</div><div class="eq-type">Dozer</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../Caterpillar%207D11T%20Dozer-Equipment%20Order%20Form-Fillable.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">Komatsu</span><div class="eq-name">Komatsu 980E</div><div class="eq-type">Mining Truck</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../forms/Komatsu%20980E-Equipment%20Order%20Form.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">Komatsu</span><div class="eq-name">Komatsu HM400</div><div class="eq-type">Articulated Truck</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../forms/Komatsu%20HM400-Equipment%20Order%20Form-Fillable.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">Komatsu</span><div class="eq-name">Komatsu PC290LC-11</div><div class="eq-type">Excavator</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../Komatsu%20PC290LC-11-Equipment%20Order%20Form.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">Hitachi</span><div class="eq-name">Hitachi EX8000-6</div><div class="eq-type">Excavator</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../Hitachi%20EX8000-6-Equipment%20Order%20Form-Fillable.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">Hitachi</span><div class="eq-name">Hitachi Mining Truck</div><div class="eq-type">Mining Truck</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../Hitachi%20Mining%20Truck-Equipment%20Order%20Form-Fillable.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">John Deere</span><div class="eq-name">John Deere 870G LC</div><div class="eq-type">Excavator</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../John%20Deere-870G%20LC-Equipment%20Order%20Form-Fillable.pdf" target="_blank">Equipment order form ↗</a></div>
-        <div class="eq"><span class="eq-oem">John Deere</span><div class="eq-name">John Deere ADT</div><div class="eq-type">Articulated Dump Truck</div><div class="eq-parts"><span>Hardened Bearings</span><span>Spherical Bearings</span><span>Stud Ball Kits</span><span>Seal Kit</span><span>High-Performance Replacements</span></div><a class="eq-form" href="../John%20Deere-Articulated%20Dump%20Truck-Equipment%20Order%20Form-Fillable.pdf" target="_blank">Equipment order form ↗</a></div>
-      </div>
-    </section>
-
-    <section class="band">
-      <div class="band-head"><span class="band-tag oring">Products for Mining Equipment</span><span class="band-count">5</span><span class="band-rule"></span></div>
-      <div class="grid">
-        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/hardened-steel-bushings/hardened-steel-bushings-inch"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/hardened_steel_bushings_600_6c3b98a43f.png" alt=""></span><div class="body"><div class="name">Hardened Bearings</div><span class="cnt">HSB1 · HSB2 · HSB3</span></div></a>
-        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/spherical-ball-bushing/spherical-ball-bushings-inch/sbb"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/SBB_600_e8f075a40e.png" alt=""></span><div class="body"><div class="name">Spherical Bearings</div><span class="cnt">GE-GSR2S · GE-ESR2S · SBB · SBB-2RS</span></div></a>
-        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts"><span class="thumb"><span class="mono">SB</span></span><div class="body"><div class="name">Stud Ball Kits</div><span class="cnt">OEM-specific</span></div></a>
-        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/oem-kits-parts/mobile-equipment-seal-kits"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/all_parts_web_83c5914d83.png" alt=""></span><div class="body"><div class="name">OEM Seal Kits</div><span class="cnt">Cat · Komatsu · Deere · Hitachi</span></div></a>
-        <a class="card top" href="https://www.sealsonline.com/en/flabed/categories/piston-seals/piston-seals-inch"><span class="thumb"><img src="https://cms.sealsonline.com/uploads/piston_seals_31249b662d.jpg" alt=""></span><div class="body"><div class="name">High-Performance Replacements</div><span class="cnt">Resilon® piston · pony rod · valve seals · well service packing</span></div></a>
-      </div>
-    </section>
   </main>
+
+<!-- ===== ORDER PANEL (per machine) ===== -->
+<div class="op-backdrop" id="op-backdrop" hidden>
+  <div class="op" role="dialog" aria-modal="true" aria-labelledby="op-title">
+    <div class="op-head">
+      <img class="op-photo" id="op-photo" src="" alt="">
+      <div class="op-titles">
+        <span class="eq-oem" id="op-oem"></span>
+        <h2 id="op-title"></h2>
+        <div class="op-sub" id="op-sub"></div>
+      </div>
+      <button type="button" class="op-close" id="op-close" aria-label="Close">×</button>
+    </div>
+    <div class="op-note" id="op-note" hidden></div>
+    <nav class="op-tabs" id="op-tabs"></nav>
+    <div class="op-body" id="op-body"></div>
+    <div class="op-foot">
+      <button type="button" class="btn ghost" id="op-quote">Request a quote for this machine</button>
+      <button type="button" class="btn primary" id="op-cart">View cart (<span class="cart-count">0</span>)</button>
+    </div>
+  </div>
+</div>
+<!-- ===== CART DRAWER ===== -->
+<div class="cart-backdrop" id="cart-backdrop" hidden>
+  <aside class="cart" role="dialog" aria-label="Cart">
+    <div class="cart-head"><h2>Your cart</h2><button type="button" class="op-close" id="cart-close" aria-label="Close">×</button></div>
+    <div class="cart-body" id="cart-body"></div>
+    <div class="cart-foot">
+      <div class="cart-total">List subtotal <b id="cart-total">$0.00</b></div>
+      <button type="button" class="btn primary" id="cart-checkout">Proceed to checkout</button>
+      <div class="cart-note">Mockup — the cart is kept in this browser tab only. Prices shown are Dynamics list prices; your account pricing applies at checkout.</div>
+    </div>
+  </aside>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="../data/mining-equipment.js"></script>
+<script src="../assets/mining-photos-1.js"></script>
+<script src="../assets/mining-photos-2.js"></script>
+<script src="../assets/mining-photos-3.js"></script>
+<script>
+(function(){
+  'use strict';
+  var DATA = window.MINING_DATA;
+  var PHOTOS = window.MINING_PHOTOS || {};
+  Array.prototype.forEach.call(document.querySelectorAll('img[data-photo]'), function(img){ if (PHOTOS[img.getAttribute('data-photo')]) img.src = PHOTOS[img.getAttribute('data-photo')]; });
+  var CARDS = {};
+  DATA.cards.forEach(function(c){ CARDS[c.slug] = c; });
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(ch){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]; }); };
+  var money = function(v){ if (v == null || v === '' || Number(v) === 0) return '<span class="q">Quote</span>'; return '$' + Number(v).toLocaleString('en-CA', {minimumFractionDigits:2, maximumFractionDigits:2}) + '<small>list</small>'; };
+  var secId = function(g){ return 'g-' + String(g).replace(/ /g, '_').replace(/'/g, ''); };
+
+  /* ---------- cart (in-memory, this tab only) ---------- */
+  var cart = [];
+  function cartCount(){ return cart.reduce(function(n, l){ return n + l.qty; }, 0); }
+  function renderCartCount(){
+    var n = cartCount();
+    Array.prototype.forEach.call(document.querySelectorAll('.cart-count, #cart-count'), function(el){ el.textContent = n; });
+  }
+  function addToCart(item, qty){
+    qty = Math.max(1, parseInt(qty, 10) || 1);
+    var line = cart.filter(function(l){ return l.part === item.part && l.machine === item.machine; })[0];
+    if (line) line.qty += qty; else cart.push({part:item.part, description:item.description, price:item.price, machine:item.machine, qty:qty});
+    renderCartCount(); toast(qty + ' × ' + item.part + ' added to cart');
+  }
+  function renderCart(){
+    var body = $('cart-body'); var total = 0;
+    if (!cart.length){ body.innerHTML = '<div class="cart-empty">Your cart is empty. Open a machine under <b>Equipment · Make · Model</b> and add the parts that fit it.</div>'; }
+    else {
+      body.innerHTML = cart.map(function(l, i){
+        var lt = (l.price || 0) * l.qty; total += lt;
+        return '<div class="cart-line"><div class="pn">' + esc(l.part) + '</div><div class="d">' + esc(l.description || '') + '</div><div class="for">for ' + esc(l.machine) + '</div>' +
+          '<div class="r"><span>' + (l.price ? money(lt) : '<span class="q">Quote</span>') + '</span><input type="number" min="1" value="' + l.qty + '" data-i="' + i + '"><button type="button" data-rm="' + i + '">Remove</button></div></div>';
+      }).join('');
+    }
+    $('cart-total').innerHTML = '$' + total.toLocaleString('en-CA', {minimumFractionDigits:2, maximumFractionDigits:2});
+    renderCartCount();
+  }
+  function openCart(){ renderCart(); $('cart-backdrop').hidden = false; document.body.style.overflow = 'hidden'; }
+  function closeCart(){ $('cart-backdrop').hidden = true; if ($('op-backdrop').hidden) document.body.style.overflow = ''; }
+  $('cart-btn').addEventListener('click', openCart);
+  $('op-cart').addEventListener('click', openCart);
+  $('cart-close').addEventListener('click', closeCart);
+  $('cart-backdrop').addEventListener('click', function(e){ if (e.target === $('cart-backdrop')) closeCart(); });
+  $('cart-body').addEventListener('change', function(e){ var i = e.target.getAttribute('data-i'); if (i != null){ cart[i].qty = Math.max(1, parseInt(e.target.value, 10) || 1); renderCart(); } });
+  $('cart-body').addEventListener('click', function(e){ var i = e.target.getAttribute('data-rm'); if (i != null){ cart.splice(i, 1); renderCart(); } });
+  $('cart-checkout').addEventListener('click', function(){ toast('Mockup — checkout is not connected yet'); });
+
+  var toastTimer;
+  function toast(msg){ var t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.hidden = true; }, 2200); }
+
+  /* ---------- order panel ---------- */
+  var current = null;
+  function kitRows(kits, machine){
+    return '<div class="tbl"><table class="parts"><thead><tr><th>Application</th><th>Kit part number</th><th class="det">Details</th><th class="used">Components</th><th style="text-align:right">List price</th><th></th></tr></thead><tbody>' +
+      kits.map(function(k){
+        var det = [];
+        if (k.bore) det.push('Bore ' + k.bore + (k.unit === 'M' ? ' mm' : '"'));
+        if (k.rod) det.push('Rod ' + k.rod + (k.unit === 'M' ? ' mm' : '"'));
+        if (k.status && k.status !== 'Active') det.push(k.status);
+        return '<tr><td>' + esc(k.applications.join(' / ') || '—') + '</td><td class="pn">' + esc(k.kit) + '</td><td class="det">' + esc(det.join(' · ')) + '</td>' +
+          '<td class="used">' + (k.component_count ? k.component_count + ' parts listed below' : 'Kit only') + '</td><td class="price">' + money(k.list_price) + '</td>' +
+          '<td class="act"><input class="qty" type="number" min="1" value="1"><button type="button" class="btn add" data-part="' + esc(k.kit) + '" data-desc="' + esc(machine + ' — ' + k.applications.join(' / ') + ' seal kit') + '" data-price="' + (k.list_price || 0) + '">Add to cart</button></td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  function groupRows(g){
+    return '<div class="tbl"><table class="parts"><thead><tr><th>Part number</th><th>Description</th><th class="used">Used in</th><th style="text-align:right">List price</th><th></th></tr></thead><tbody>' +
+      g.items.map(function(it){
+        var used = it.used_in.map(function(u){ return esc(u.application) + ' (' + esc(u.kit) + ', qty ' + esc(u.qty) + ')'; }).join('<br>');
+        return '<tr><td class="pn"><a href="' + esc(it.u != null ? DATA.urls[it.u] : it.url) + '" target="_blank" rel="noopener" title="Open this product type on sealsonline.com">' + esc(it.part) + '</a></td><td>' + esc(it.description) + (it.profile ? ' <small style="color:#888">· ' + esc(it.profile) + '</small>' : '') + '</td>' +
+          '<td class="used">' + used + '</td><td class="price">' + money(it.list_price) + '</td>' +
+          '<td class="act"><input class="qty" type="number" min="1" value="' + (it.used_in[0] && parseInt(it.used_in[0].qty, 10) || 1) + '"><button type="button" class="btn add" data-part="' + esc(it.part) + '" data-desc="' + esc(it.description) + '" data-price="' + (it.list_price || 0) + '">Add to cart</button></td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  function build(c){
+    var h = '';
+    var tabs = [];
+    $('op-note').textContent = c.note || ''; $('op-note').hidden = !c.note;
+    var kits = c.kits.length ? c.kits : c.nearest_kits;
+    var kitTitle = c.kits.length ? 'Seal kits for the ' + c.name : (c.nearest_model ? 'Seal kits on file for the ' + (c.nearest_model === 'EH5000' ? 'Euclid-Hitachi EH5000' : c.oem + ' ' + c.nearest_model) : c.oem + ' seal kits');
+    h += '<section class="op-sec" id="sec-kits"><h3>' + esc(kitTitle) + ' <span class="n">' + kits.length + '</span><a class="browse" href="' + esc(c.oem_url) + '" target="_blank" rel="noopener">All ' + esc(c.oem) + ' kits on sealsonline.com ↗</a></h3>';
+    if (kits.length) h += kitRows(kits, c.name);
+    else h += '<p style="font-size:13.5px;color:#555;margin:0 0 8px">No seal kit is set up in Dynamics for this model yet. Enter the OEM kit or cylinder number below and we will quote it.</p>' + freeRow('Seal kit');
+    h += '</section>';
+    tabs.push(['sec-kits', 'Seal kits']);
+    c.component_groups.forEach(function(g){
+      var id = 'sec-' + secId(g.group);
+      h += '<section class="op-sec" id="' + id + '"><h3>' + esc(g.label) + ' <span class="n">' + g.items.length + '</span><a class="browse" href="' + esc(g.url) + '" target="_blank" rel="noopener">Browse all ' + esc(g.label) + ' ↗</a></h3>' + groupRows(g) + '</section>';
+      tabs.push([id, g.label]);
+    });
+    h += '<section class="op-sec" id="sec-curated"><h3>Also for this machine</h3><p style="font-size:13px;color:#555;margin:0 0 6px">Hardened bearings, spherical bearings, stud ball kits and high-performance replacement seals are sized per pin and cylinder — browse the range or enter the part number you need.</p>';
+    c.curated.forEach(function(cu){
+      h += '<div class="free-row"><b style="min-width:230px;font-family:\'Archivo\',sans-serif;font-size:13px">' + esc(cu.label) + '</b><span style="font-size:12px;color:#777">' + esc(cu.note) + '</span><a class="browse" style="font-family:Arial,sans-serif;font-weight:700;font-size:12.5px;color:#111;text-decoration:none;border-bottom:2px solid #F5D000" href="' + esc(cu.url) + '" target="_blank" rel="noopener">Browse ↗</a></div>' + freeRow(cu.label);
+    });
+    h += '</section>';
+    tabs.push(['sec-curated', 'Bearings & more']);
+    if (c.related_models.length){
+      h += '<section class="op-sec" id="sec-related"><h3>Other ' + esc(c.oem) + ' models on file <span class="n">' + c.related_models.length + '</span></h3>';
+      c.related_models.forEach(function(r){
+        var apps = []; r.kits.forEach(function(k){ k.applications.forEach(function(a){ if (apps.indexOf(a) < 0) apps.push(a); }); });
+        h += '<details class="rel"><summary>' + esc(c.oem + ' ' + r.model) + ' <span class="n">' + r.kit_count + ' kit' + (r.kit_count === 1 ? '' : 's') + (r.component_count ? ' · ' + r.component_count + ' components' : '') + '</span><span class="apps">' + esc(apps.slice(0, 6).join(' · ')) + (apps.length > 6 ? ' …' : '') + '</span></summary>' + kitRows(r.kits, c.oem + ' ' + r.model);
+        r.component_groups.forEach(function(g){
+          h += '<h4 style="font-family:\'Archivo\',sans-serif;font-size:13.5px;margin:12px 0 6px">' + esc(g.label) + ' <span class="n" style="font-family:\'Saira Condensed\',sans-serif;font-size:11.5px;color:#fff;background:#111;border-radius:100px;padding:1px 7px">' + g.items.length + '</span> <a class="browse" style="font-family:Arial,sans-serif;font-weight:700;font-size:12px;color:#111;text-decoration:none;border-bottom:2px solid #F5D000;margin-left:8px" href="' + esc(g.url) + '" target="_blank" rel="noopener">Browse ↗</a></h4>' + groupRows(g);
+        });
+        h += '</details>';
+      });
+      h += '</section>';
+      tabs.push(['sec-related', 'Other models']);
+    }
+    $('op-body').innerHTML = h;
+    $('op-tabs').innerHTML = tabs.map(function(t){ return '<a href="#' + t[0] + '" data-sec="' + t[0] + '">' + esc(t[1]) + '</a>'; }).join('');
+  }
+  function freeRow(label){
+    return '<div class="free-row"><input class="pnin" placeholder="Part number for ' + esc(label.toLowerCase()) + '" aria-label="Part number"><input class="qty" type="number" min="1" value="1" style="width:60px"><button type="button" class="btn add free">Add to cart</button></div>';
+  }
+  function open(slug, sec){
+    var c = CARDS[slug]; if (!c) return;
+    current = c;
+    var cardImg = document.querySelector('#eq-' + slug + ' .eq-photo img'); $('op-photo').src = cardImg ? cardImg.src : ('../' + c.photo); $('op-photo').alt = c.name;
+    $('op-oem').textContent = c.oem; $('op-title').textContent = c.name.toLowerCase().indexOf(c.type.toLowerCase()) >= 0 ? c.name : c.name + ' ' + c.type;
+    $('op-sub').textContent = (c.kit_count ? c.kit_count + ' seal kit' + (c.kit_count === 1 ? '' : 's') + ' on file' : (c.nearest_kits.length ? c.nearest_kits.length + ' kit' + (c.nearest_kits.length === 1 ? '' : 's') + ' on file for the nearest model' : 'No model-specific kit on file yet')) + (c.component_count ? ' · ' + c.component_count + ' components by product type' : '') + ' · Source: Fluidseal Dynamics (' + DATA.generated + ')';
+    build(c);
+    $('op-backdrop').hidden = false; document.body.style.overflow = 'hidden';
+    var target = sec === 'kits' ? 'sec-kits' : sec === 'curated' ? 'sec-curated' : sec === 'related' ? 'sec-related' : 'sec-' + sec;
+    setTimeout(function(){ jump(target); }, 30);
+  }
+  function jump(id){
+    var el = $(id); if (!el) return;
+    Array.prototype.forEach.call(document.querySelectorAll('.op-sec.hl'), function(s){ s.classList.remove('hl'); });
+    Array.prototype.forEach.call(document.querySelectorAll('.op-tabs a'), function(a){ a.classList.toggle('on', a.getAttribute('data-sec') === id); });
+    el.classList.add('hl'); el.scrollIntoView({block:'start', behavior:'smooth'});
+  }
+  function close(){ $('op-backdrop').hidden = true; if ($('cart-backdrop').hidden) document.body.style.overflow = ''; }
+  $('op-close').addEventListener('click', close);
+  $('op-backdrop').addEventListener('click', function(e){ if (e.target === $('op-backdrop')) close(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ if (!$('cart-backdrop').hidden) closeCart(); else close(); } });
+  $('op-tabs').addEventListener('click', function(e){ var a = e.target.closest('a'); if (!a) return; e.preventDefault(); jump(a.getAttribute('data-sec')); });
+  $('op-body').addEventListener('click', function(e){
+    var b = e.target.closest('button.add'); if (!b) return;
+    var row = b.closest('tr') || b.closest('.free-row');
+    var qty = row ? (row.querySelector('input.qty') || {}).value : 1;
+    if (b.classList.contains('free')){
+      var pn = (row.querySelector('input.pnin').value || '').trim();
+      if (!pn){ toast('Enter a part number first'); row.querySelector('input.pnin').focus(); return; }
+      addToCart({part:pn.toUpperCase(), description:'Customer-entered part number (to be confirmed)', price:0, machine:current.name}, qty);
+      row.querySelector('input.pnin').value = '';
+    } else {
+      addToCart({part:b.getAttribute('data-part'), description:b.getAttribute('data-desc'), price:parseFloat(b.getAttribute('data-price')) || 0, machine:current.name}, qty);
+    }
+    b.classList.add('added'); b.textContent = 'Added ✓'; setTimeout(function(){ b.classList.remove('added'); b.textContent = 'Add to cart'; }, 1400);
+  });
+  $('op-quote').addEventListener('click', function(){ toast('Mockup — a quote request for the ' + current.name + ' would go to Fluidseal AB here'); });
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-open]'); if (!t) return;
+    e.preventDefault(); open(t.getAttribute('data-open'), t.getAttribute('data-sec') || 'kits');
+  });
+  // deep link: mining.html#eq-cat-797f opens the panel
+  if (location.hash && location.hash.indexOf('#eq-') === 0){ var slug = location.hash.slice(4); if (CARDS[slug]) open(slug, 'kits'); }
+})();
+
+</script>
 </body>
 </html>
